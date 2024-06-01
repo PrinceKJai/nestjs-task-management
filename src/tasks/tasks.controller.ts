@@ -48,6 +48,11 @@ export class TasksController {
   //   return this.taskService.createTask(createTaskDto);
   // }
 
+  @Post()
+  createTask(@Body() createTaskDto: CreateTaskDTO): Promise<Task> {
+    return this.taskService.createTask(createTaskDto);
+  }
+
   // @Get('/:id')
   // getTaskByID(@Param('id') id: string): Task {
   //   return this.taskService.getTaskByID(id);

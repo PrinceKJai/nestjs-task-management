@@ -8,14 +8,14 @@ import { TaskRepository } from './tasks.repository';
 import { Task } from './task.entity';
 @Injectable()
 export class TasksService {
-//   constructor(
-//     @InjectRepository(TaskRepository)
-//     private taskRepository: TaskRepository,
-//   ) {}
-constructor(
+  //   constructor(
+  //     @InjectRepository(TaskRepository)
+  //     private taskRepository: TaskRepository,
+  //   ) {}
+  constructor(
     @InjectRepository(Task)
     private taskRepository: TaskRepository,
-) {};
+  ) {}
   //   private tasks: Task[] = [];
 
   //   getAllTasks(): Task[] {
@@ -56,6 +56,19 @@ constructor(
   //     return task;
   //   }
 
+  async createTask(createTaskDto: CreateTaskDTO): Promise<Task> {
+    const { title, description } = createTaskDto;
+
+    const task: Task = this.taskRepository.create({
+      title,
+      description,
+      status: TaskStatus.OPEN,
+    });
+
+    await this.taskRepository.save(task);
+    return task;
+  }
+
   //   getTaskByID(id: string): Task {
   //     const filteredData = this.tasks.find((item) => item.id === id);
   //     if (!filteredData) {
@@ -64,13 +77,13 @@ constructor(
   //     return filteredData;
   //   }
 
-     async getTaskByID(id: string): Promise<Task> {
-      const filteredData = await this.taskRepository.findOne(id);
-      if (!filteredData) {
-        throw new NotFoundException(`Task with id:${id} not found`);
-      }
-      return filteredData;
+  async getTaskByID(id: string): Promise<Task> {
+    const filteredData = await this.taskRepository.findOne(id);
+    if (!filteredData) {
+      throw new NotFoundException(`Task with id:${id} not found`);
     }
+    return filteredData;
+  }
 
   //   deleteTaskByID(id: string): string {
   //     const found = this.getTaskByID(id);
