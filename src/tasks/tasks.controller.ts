@@ -68,6 +68,11 @@ export class TasksController {
   //   return this.taskService.deleteTaskByID(id);
   // }
 
+  @Delete('/:id')
+  async deleteTaskByID(@Param('id') id: string): Promise<string> {
+    return this.taskService.deleteTaskByID(id);
+  }
+
   // @Patch('/:id/status')
   // updateTaskStatus(
   //   @Param('id') id: string,
@@ -76,4 +81,13 @@ export class TasksController {
   //   const { status } = updateTaskStatusDto;
   //   return this.taskService.updateTaskStatus(id, status);
   // }
+
+  @Patch('/:id/status')
+  updateTaskStatus(
+    @Param('id') id: string,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDTO,
+  ): Promise<Task> {
+    const { status } = updateTaskStatusDto;
+    return this.taskService.updateTaskStatus(id, status);
+  }
 }
