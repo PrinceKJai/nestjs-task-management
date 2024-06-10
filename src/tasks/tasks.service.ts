@@ -43,6 +43,13 @@ export class TasksService {
   //     return tasks;
   //   }
 
+
+  async getTasks(filterTasksDto: GetTasksFilterDTO): Promise<Task[]> {
+    const query = this.taskRepository.createQueryBuilder('task');
+    const tasks = await query.getMany();
+    return tasks;
+  }
+
   //   createTask(createTaskDto: CreateTaskDTO): Task {
   //     const { title, description } = createTaskDto;
 

@@ -17,4 +17,10 @@ export class TaskRepository extends Repository<Task> {
   //   await this.save(task);
   //   return task;
   // }
+
+  // async getTasks(createTaskDto: CreateTaskDTO): Promise<Task[]> {
+  //   const query = this.createQueryBuilder('task');
+
+  // }
+
 }
