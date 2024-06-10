@@ -43,9 +43,23 @@ export class TasksService {
   //     return tasks;
   //   }
 
-
   async getTasks(filterTasksDto: GetTasksFilterDTO): Promise<Task[]> {
+    const { status, search } = filterTasksDto;
     const query = this.taskRepository.createQueryBuilder('task');
+    if (status) {
+      //:status is a variable and can be anything
+      //  query.andWhere('task.status = :hello', { hello: status});
+      query.andWhere('task.status = :status', { status: status });
+    }
+    if (search) {
+      //:search is a variable and can be anything
+      //  LOWER is for converting the passed in serach query to lower case
+      //the LIKE is for retruning values like: fo, foo, food even if the user seraches for food
+      query.andWhere(
+        'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)',
+        { search: `%${search}%` },
+      );
+    }
     const tasks = await query.getMany();
     return tasks;
   }
@@ -99,18 +113,18 @@ export class TasksService {
   //     return `Task with id:${id} was deleted successfully`;
   //   }
 
-    async deleteTaskByID(id: string): Promise<string> {
-      // const found = await this.getTaskByID(id);
-      // await this.taskRepository.delete(found);
-      // return `Task with id:${id} was deleted successfully`;
+  async deleteTaskByID(id: string): Promise<string> {
+    // const found = await this.getTaskByID(id);
+    // await this.taskRepository.delete(found);
+    // return `Task with id:${id} was deleted successfully`;
 
-      const result = await this.taskRepository.delete(id);
+    const result = await this.taskRepository.delete(id);
 
-      if(result.affected === 0) {
-        throw new NotFoundException(`Task with Id: ${id} was not found!`);
-      }
-      return `Task with id:${id} was deleted successfully`;
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with Id: ${id} was not found!`);
     }
+    return `Task with id:${id} was deleted successfully`;
+  }
 
   //   updateTaskStatus(id: string, status: TaskStatus): Task {
   //     const taskToBeUpdated = this.getTaskByID(id);
@@ -119,10 +133,10 @@ export class TasksService {
   //     return taskToBeUpdated;
   //   }
 
-    async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
-      const taskToBeUpdated = await this.getTaskByID(id);
-      taskToBeUpdated.status = status;
-      await this.taskRepository.save(taskToBeUpdated);
-      return taskToBeUpdated;
-    }
+  async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
+    const taskToBeUpdated = await this.getTaskByID(id);
+    taskToBeUpdated.status = status;
+    await this.taskRepository.save(taskToBeUpdated);
+    return taskToBeUpdated;
+  }
 }
