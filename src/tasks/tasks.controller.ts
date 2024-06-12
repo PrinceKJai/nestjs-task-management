@@ -19,6 +19,7 @@ import { UpdateTaskStatusDTO } from './dto/update-task-status.dto';
 import { TaskStatus } from './task-status.enum';
 import { Task } from './task.entity';
 import { TasksService } from './tasks.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
@@ -28,7 +29,10 @@ export class TasksController {
   //     this.taskService = taskService;
   // }
 private logger = new Logger('TasksController');
-  constructor(private taskService: TasksService) {}
+  constructor(private taskService: TasksService, private configService: ConfigService) {
+    console.log("ENV VAL", configService.get('TEST_DEV'))
+    console.log("ENV VAL", configService.get('TEST_PROD'))
+  }
   // @Get()
   // getAllTasks(@Query() filterTasksDto: GetTasksFilterDTO): Task[] {
   //   if (Object.keys(filterTasksDto).length > 0) {
@@ -39,7 +43,9 @@ private logger = new Logger('TasksController');
 
   @Get()
   getTasks(@Query() filterTasksDto: GetTasksFilterDTO, @GetUser() user: User): Promise<Task[]> {
-    this.logger.verbose( `User: ${user.username} retrieving tasks with filters ${JSON.stringify(filterTasksDto)}`)
+    this.logger.verbose( `User: ${user.username} retrieving tasks with filters ${JSON.stringify(filterTasksDto)}`);
+    console.log("ENV VAL in methods", this.configService.get('TEST_DEV'))
+
     return this.taskService.getTasks(filterTasksDto, user);
   }
 
