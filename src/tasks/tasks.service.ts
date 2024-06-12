@@ -58,7 +58,7 @@ export class TasksService {
       //  LOWER is for converting the passed in serach query to lower case
       //the LIKE is for retruning values like: fo, foo, food even if the user seraches for food
       query.andWhere(
-        'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)',
+        '(LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search))',
         { search: `%${search}%` },
       );
     }
